@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <properties resource="application.properties" />
+    <!--targetRuntime有MyBatis3和MyBatis3Simple有所不同-->
+    <context id="context1" targetRuntime="MyBatis3Simple">
+
+        <!-- 自定义注释生成器 -->
+        <commentGenerator type="com.njupt.system.util.MySQLCommentGenerator">
+            <property name="author" value="Elaine"/>
+            <property name="dateFormat" value="yyyy/MM/dd"/>
+        </commentGenerator>
+
+        <!-- 数据库连接信息 -->
+        <jdbcConnection driverClass="${jdbc.driverClassName}"
+                        connectionURL="${jdbc.url}" userId="${jdbc.username}" password="${jdbc.password}" />
+
+        <!-- 生成Model对象路径配置 -->
+        <javaModelGenerator targetPackage="${package}.model"
+                            targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!--Mapper映射文件生成所在的目录 为每一个数据库的表生成对应的SqlMap文件 -->
+        <sqlMapGenerator targetPackage="${package}.mapper"
+                         targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- 生成DAO接口文件路径配置 -->
+        <!-- 客户端代码，生成易于使用的针对Model对象和XML配置文件 的代码
+        type="ANNOTATEDMAPPER",生成Java Model 和基于注解的Mapper对象
+        type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
+        type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
+        -->
+        <javaClientGenerator targetPackage="${package}.mapper"
+                             targetProject="src/main/java" type="ANNOTATEDMAPPER">
+        </javaClientGenerator>
+
+        <!--要生成哪些表 -->
+<!--        <table tableName="user_info" domainObjectName="User"/>-->
+        <table tableName="admin" domainObjectName="Admin"/>
+<!--        <table tableName="information" domainObjectName="Information"/>-->
+<!--        <table tableName="information_push" domainObjectName="InformationPush"/>-->
+    </context>
+</generatorConfiguration>
