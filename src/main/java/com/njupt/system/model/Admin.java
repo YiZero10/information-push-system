@@ -33,7 +33,7 @@ public class Admin {
     /**
      * 部门
      */
-    private String department;
+    private Integer department;
 
     private Date gmtCreated;
 
@@ -71,12 +71,12 @@ public class Admin {
         this.type = type;
     }
 
-    public String getDepartment() {
+    public Integer getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
-        this.department = department == null ? null : department.trim();
+    public void setDepartment(Integer department) {
+        this.department = department;
     }
 
     public Date getGmtCreated() {

@@ -18,5 +18,5 @@ public class SignInModel {
 
     private String password;
 
-    private int code;
+    private int permission;
 }

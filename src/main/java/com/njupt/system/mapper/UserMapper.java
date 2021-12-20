@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.stereotype.Component;
 
 @Mapper
+@Component
 public interface UserMapper {
     @Delete({
         "delete from user_info",
@@ -20,11 +22,11 @@ public interface UserMapper {
         "password, type, ",
         "class_id, gmt_created, ",
         "gmt_modified)",
-        "values (#{id,jdbcType=INTEGER}, #{tel,jdbcType=INTEGER}, ",
+        "values (#{id,jdbcType=INTEGER}, #{tel,jdbcType=VARCHAR}, ",
         "#{name,jdbcType=VARCHAR}, #{studentId,jdbcType=VARCHAR}, ",
         "#{password,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, ",
-        "#{classId,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, ",
-        "#{gmtModified,jdbcType=TIMESTAMP})"
+        "#{classId,jdbcType=VARCHAR}, now(), ",
+        "now())"
     })
     int insert(User record);
 
@@ -36,7 +38,7 @@ public interface UserMapper {
     })
     @Results(id = "resultMap", value = {
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
-        @Result(column="tel", property="tel", jdbcType=JdbcType.INTEGER),
+        @Result(column="tel", property="tel", jdbcType=JdbcType.VARCHAR),
         @Result(column="name", property="name", jdbcType=JdbcType.VARCHAR),
         @Result(column="student_id", property="studentId", jdbcType=JdbcType.VARCHAR),
         @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
@@ -61,9 +63,9 @@ public interface UserMapper {
             "select",
             "id, tel, name, student_id, password, type, class_id, gmt_created, gmt_modified",
             "from user_info",
-            "where tel = #{tel,jdbcType=INTEGER}"
+            "where tel = #{tel,jdbcType=VARCHAR}"
     })
-    User selectByTel(Integer tel);
+    User selectByTel(String tel);
 
     @Select({
         "select",
@@ -72,7 +74,7 @@ public interface UserMapper {
     })
     @Results({
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
-        @Result(column="tel", property="tel", jdbcType=JdbcType.INTEGER),
+        @Result(column="tel", property="tel", jdbcType=JdbcType.VARCHAR),
         @Result(column="name", property="name", jdbcType=JdbcType.VARCHAR),
         @Result(column="student_id", property="studentId", jdbcType=JdbcType.VARCHAR),
         @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
@@ -85,14 +87,13 @@ public interface UserMapper {
 
     @Update({
         "update user_info",
-        "set tel = #{tel,jdbcType=INTEGER},",
+        "set tel = #{tel,jdbcType=VARCHAR},",
           "name = #{name,jdbcType=VARCHAR},",
           "student_id = #{studentId,jdbcType=VARCHAR},",
           "password = #{password,jdbcType=VARCHAR},",
           "type = #{type,jdbcType=INTEGER},",
           "class_id = #{classId,jdbcType=VARCHAR},",
-          "gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},",
-          "gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}",
+          "gmt_modified = now()",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(User record);

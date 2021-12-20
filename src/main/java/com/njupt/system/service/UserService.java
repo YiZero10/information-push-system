@@ -81,17 +81,34 @@ public interface UserService {
     /**
      * 修改密码
      * @param user
-     * @param password
+     * @param oldPwd
+     * @param newPwd
      * @return
      */
-    boolean modifyPassword(User user, String password);
+    boolean modifyPassword(User user, String oldPwd, String newPwd);
 
     /**
-     * 管理员重置密码
+     * 修改密码
+     * @param admin
+     * @param oldPwd
+     * @param newPwd
+     * @return
+     */
+    boolean modifyPassword(Admin admin, String oldPwd, String newPwd);
+
+    /**
+     * 重置用户密码
      * @param admin
      * @param userId
      * @return
      */
-    boolean resetPassword(Admin admin, Integer userId);
+    boolean resetUserPassword(Admin admin, Integer userId);
 
+    /**
+     * 重置管理员密码
+     * @param admin
+     * @param adminId
+     * @return
+     */
+    boolean resetAdminPassword(Admin admin, Integer adminId);
 }

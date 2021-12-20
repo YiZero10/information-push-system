@@ -25,8 +25,8 @@ public interface InformationMapper {
         "#{coverImg,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, ",
         "#{adminId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, ",
         "#{visibleRange,jdbcType=INTEGER}, #{releaseTime,jdbcType=TIMESTAMP}, ",
-        "#{gmtCreated,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, ",
-        "#{content,jdbcType=LONGVARCHAR})"
+        "#{gmtCreated,jdbcType=TIMESTAMP}, now(), ",
+        "now())"
     })
     int insert(Information record);
 
@@ -82,8 +82,7 @@ public interface InformationMapper {
           "status = #{status,jdbcType=INTEGER},",
           "visible_range = #{visibleRange,jdbcType=INTEGER},",
           "release_time = #{releaseTime,jdbcType=TIMESTAMP},",
-          "gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},",
-          "gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},",
+          "gmt_modified = now(),",
           "content = #{content,jdbcType=LONGVARCHAR}",
         "where id = #{id,jdbcType=INTEGER}"
     })

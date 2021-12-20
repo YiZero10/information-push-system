@@ -17,7 +17,7 @@ public class User {
     /**
      * 手机号
      */
-    private Integer tel;
+    private String tel;
 
     /**
      * 姓名
@@ -62,11 +62,11 @@ public class User {
         this.id = id;
     }
 
-    public Integer getTel() {
+    public String getTel() {
         return tel;
     }
 
-    public void setTel(Integer tel) {
+    public void setTel(String tel) {
         this.tel = tel;
     }
 

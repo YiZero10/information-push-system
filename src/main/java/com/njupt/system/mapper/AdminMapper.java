@@ -21,8 +21,8 @@ public interface AdminMapper {
         "gmt_modified)",
         "values (#{id,jdbcType=INTEGER}, #{jobId,jdbcType=VARCHAR}, ",
         "#{password,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, ",
-        "#{department,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, ",
-        "#{gmtModified,jdbcType=TIMESTAMP})"
+        "#{department,jdbcType=INTEGER}, now(), ",
+        "now())"
     })
     int insert(Admin record);
 
@@ -32,31 +32,23 @@ public interface AdminMapper {
         "from admin",
         "where id = #{id,jdbcType=INTEGER}"
     })
-    @Results({
+    @Results(id = "resultMap", value = {
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="job_id", property="jobId", jdbcType=JdbcType.VARCHAR),
         @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
         @Result(column="type", property="type", jdbcType=JdbcType.INTEGER),
-        @Result(column="department", property="department", jdbcType=JdbcType.VARCHAR),
+        @Result(column="department", property="department", jdbcType=JdbcType.INTEGER),
         @Result(column="gmt_created", property="gmtCreated", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP)
     })
     Admin selectByPrimaryKey(Integer id);
 
+    @ResultMap("resultMap")
     @Select({
             "select",
             "id, job_id, password, type, department, gmt_created, gmt_modified",
             "from admin",
             "where job_id = #{jobId,jdbcType=VARCHAR}"
-    })
-    @Results({
-            @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
-            @Result(column="job_id", property="jobId", jdbcType=JdbcType.VARCHAR),
-            @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
-            @Result(column="type", property="type", jdbcType=JdbcType.INTEGER),
-            @Result(column="department", property="department", jdbcType=JdbcType.VARCHAR),
-            @Result(column="gmt_created", property="gmtCreated", jdbcType=JdbcType.TIMESTAMP),
-            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP)
     })
     Admin selectByJobId(String jobId);
 
@@ -70,20 +62,28 @@ public interface AdminMapper {
         @Result(column="job_id", property="jobId", jdbcType=JdbcType.VARCHAR),
         @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
         @Result(column="type", property="type", jdbcType=JdbcType.INTEGER),
-        @Result(column="department", property="department", jdbcType=JdbcType.VARCHAR),
+        @Result(column="department", property="department", jdbcType=JdbcType.INTEGER),
         @Result(column="gmt_created", property="gmtCreated", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP)
     })
     List<Admin> selectAll();
+
+    @ResultMap("resultMap")
+    @Select({
+            "select",
+            "id, job_id, password, type, department, gmt_created, gmt_modified",
+            "from admin",
+            "where department = #{department}"
+    })
+    List<Admin> selectDepartment(int department);
 
     @Update({
         "update admin",
         "set job_id = #{jobId,jdbcType=VARCHAR},",
           "password = #{password,jdbcType=VARCHAR},",
           "type = #{type,jdbcType=INTEGER},",
-          "department = #{department,jdbcType=VARCHAR},",
-          "gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},",
-          "gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}",
+          "department = #{department,jdbcType=INTEGER},",
+          "gmt_modified = now()",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(Admin record);

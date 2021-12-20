@@ -12,12 +12,19 @@ public enum CustomError {
 
     PASSWORD_ERROR(5004, "密码错误！"),
 
+    USER_NOT_EXIT(5005, "用户不存在"),
+
+    NOT_PERMISSION(5006, "权限不足!"),
+
+    DUPLICATE_INSERT(5007, "重复添加！"),
+
     TOKEN_EXPIRED(300, "Token过期"),
 
     TOKEN_PARSE_FAIL(301, "Token解析失败"),
 
-    TOKEN_KEY_NOT_MATCH(302, "密钥不匹配")
-    ;
+    TOKEN_KEY_NOT_MATCH(302, "密钥不匹配"),
+
+    CONTENT_NULL(5008, "账号或密码不能为空！");
 
     private int code;
 
