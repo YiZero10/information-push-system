@@ -18,7 +18,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class InfoArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        //只有 UserInfo
         return methodParameter.getParameterType().isAssignableFrom(User.class)
                 || methodParameter.getParameterType().isAssignableFrom(Admin.class);
     }

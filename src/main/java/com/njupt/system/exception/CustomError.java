@@ -24,7 +24,11 @@ public enum CustomError {
 
     TOKEN_KEY_NOT_MATCH(302, "密钥不匹配"),
 
-    CONTENT_NULL(5008, "账号或密码不能为空！");
+    CONTENT_NULL(5008, "账号或密码不能为空！"),
+
+    SIGN_IN_REQUIRED(5009, "尚未登陆！"),
+
+    DELETE_SELF(5010, "不能删除自己哦！");
 
     private int code;
 

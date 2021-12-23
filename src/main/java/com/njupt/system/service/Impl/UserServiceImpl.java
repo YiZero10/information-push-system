@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String signIn(SignInModel signInModel, int permission) {
+
         if (signInModel.getUserId() == null || signInModel.getPassword() == null){
             throw new LocalRuntimeException(CustomError.CONTENT_NULL);
         }
@@ -50,10 +51,12 @@ public class UserServiceImpl implements UserService {
         JSONObject object = (JSONObject) (permission <= Permission.COMMON.getCode() ? JSON.toJSON(adminMapper.selectByJobId(signInModel.getUserId()))
                         : JSON.toJSON(userMapper.selectByTel(signInModel.getUserId())));
 
+        if (object == null) throw new LocalRuntimeException(CustomError.USER_NOT_EXIT);
+
         if (!BCrypt.checkpw(signInModel.getPassword(), object.getString("password"))){
             throw new LocalRuntimeException(CustomError.PASSWORD_ERROR);
         }else {
-            return jwtAuthService.GeneratorToken(object.getInteger("id"), 1);
+            return jwtAuthService.GeneratorToken(signInModel.getUserId(), 1);
         }
     }
 
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Admin> getAdmins(Admin admin) {
-        if (Permission.ROOT.getCode().equals(admin.getType())) adminMapper.selectAll();
+        if (Permission.ROOT.getCode().equals(admin.getType())) return adminMapper.selectAll();
         if (Permission.DEPARTMENT.getCode().equals(admin.getDepartment())) return adminMapper.selectDepartment(admin.getDepartment());
         return null;
     }
@@ -83,6 +86,7 @@ public class UserServiceImpl implements UserService {
             throw new LocalRuntimeException(CustomError.NOT_PERMISSION);
         Admin object = adminMapper.selectByJobId(addAdmin.getJobId());
         if (object != null) throw new LocalRuntimeException(CustomError.DUPLICATE_INSERT);
+        addAdmin.setPassword(BCrypt.hashpw(admin.getPassword(),BCrypt.gensalt()));
         adminMapper.insert(addAdmin);
         return true;
     }
@@ -90,6 +94,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteAdmin(Admin admin, Integer adminId) {
+        if (adminId.equals(admin.getId())) throw new LocalRuntimeException(CustomError.DELETE_SELF);
         Admin object = adminMapper.selectByPrimaryKey(adminId);
         if (object == null) throw new LocalRuntimeException(CustomError.USER_NOT_EXIT);
         //不是系统管理员&&同部门管理员
@@ -115,7 +120,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean modifyPassword(User user, String oldPwd, String newPwd) {
         if (!BCrypt.checkpw(oldPwd, user.getPassword())) throw new LocalRuntimeException(CustomError.PASSWORD_ERROR);
-        user.setPassword(newPwd);
+        user.setPassword(BCrypt.hashpw(newPwd,BCrypt.gensalt()));
         userMapper.updateByPrimaryKey(user);
         return true;
     }
@@ -124,7 +129,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean modifyPassword(Admin admin, String oldPwd, String newPwd){
         if (!BCrypt.checkpw(oldPwd, admin.getPassword())) throw new LocalRuntimeException(CustomError.PASSWORD_ERROR);
-        admin.setPassword(newPwd);
+        admin.setPassword(BCrypt.hashpw(newPwd,BCrypt.gensalt()));
         adminMapper.updateByPrimaryKey(admin);
         return true;
     }

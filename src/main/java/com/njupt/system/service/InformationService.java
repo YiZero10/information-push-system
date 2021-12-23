@@ -14,11 +14,11 @@ import java.util.List;
 public interface InformationService {
 
     /**
-     * 获取消息列表
+     * 获取自己的消息列表
      * @param user
      * @return
      */
-    List<Information> getMyInformations(User user);
+    List<Information> getMyInformations(User user,Integer type);
 
     /**
      * 提交信息

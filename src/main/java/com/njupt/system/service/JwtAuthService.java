@@ -1,7 +1,6 @@
 package com.njupt.system.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.njupt.system.model.User;
 
 /**
  * @author Elaine Huang
@@ -10,7 +9,7 @@ import com.njupt.system.model.User;
  */
 public interface JwtAuthService{
 
-    String GeneratorToken(Integer Subject, int expireDay);
+    String GeneratorToken(String Subject, int expireDay);
 
-    JSONObject ParseToken(String token, int permission);
+    JSONObject ParseToken(String token, Integer permission);
 }
