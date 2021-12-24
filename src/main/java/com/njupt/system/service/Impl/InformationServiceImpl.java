@@ -39,7 +39,8 @@ public class InformationServiceImpl implements InformationService {
     @Override
     public List<Information> getMyInformation(User user,Integer type) {
         if (type == 0)
-            return informationMapper.selectByTypeAndStatus(InformationType.PUBLIC_INFORMATION.getCode(), Status.PASS_AUDIT.getCode()); //选出所有通过的公共信息
+            //选出所有通过的公共信息
+            return informationMapper.selectByTypeAndStatus(InformationType.PUBLIC_INFORMATION.getCode(), Status.PASS_AUDIT.getCode());
         else{
             //选出公共可见的&指定推送的信息
             List<Information> results = informationPushMapper.selectMyInformation(user,type);
