@@ -18,7 +18,16 @@ public interface InformationService {
      * @param user
      * @return
      */
-    List<Information> getMyInformations(User user,Integer type);
+    List<Information> getMyInformation(User user,Integer type);
+
+
+    /**
+     * 管理员获取消息
+     * @param admin
+     * @param type
+     * @return
+     */
+    List<Information> getInformation(Admin admin, Integer type);
 
     /**
      * 提交信息
@@ -26,7 +35,7 @@ public interface InformationService {
      * @param information
      * @return
      */
-    boolean submitInformation(Admin admin, Information information);
+    boolean submitInformation(Admin admin, Information information, List<String> objects);
 
     /**
      * 审核信息

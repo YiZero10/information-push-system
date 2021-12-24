@@ -28,7 +28,9 @@ public enum CustomError {
 
     SIGN_IN_REQUIRED(5009, "尚未登陆！"),
 
-    DELETE_SELF(5010, "不能删除自己哦！");
+    DELETE_SELF(5010, "不能删除自己哦！"),
+
+    INFORMATION_NOT_EXIT(5011,"该信息不存在");
 
     private int code;
 

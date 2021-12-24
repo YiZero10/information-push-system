@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum InformationType {
 
-    MAJOR_CONSTRUCTION(0, "专业建设"),
+    PUBLIC_INFORMATION(0, "公共信息"),
 
     COURSE_COMPETITION(1, "学科竞赛"),
 

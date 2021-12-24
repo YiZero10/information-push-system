@@ -23,11 +23,12 @@ public interface InformationMapper {
         "content)",
         "values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, ",
         "#{coverImg,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, ",
-        "#{adminId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, ",
+        "#{adminId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, ",
         "#{visibleRange,jdbcType=INTEGER}, #{releaseTime,jdbcType=TIMESTAMP}, ",
         "#{gmtCreated,jdbcType=TIMESTAMP}, now(), ",
         "now())"
     })
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Information record);
 
     @Select({
@@ -37,12 +38,12 @@ public interface InformationMapper {
         "from information",
         "where id = #{id,jdbcType=INTEGER}"
     })
-    @Results({
+    @Results(id = "defaultMap", value = {
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
         @Result(column="title", property="title", jdbcType=JdbcType.VARCHAR),
         @Result(column="cover_img", property="coverImg", jdbcType=JdbcType.VARCHAR),
         @Result(column="type", property="type", jdbcType=JdbcType.INTEGER),
-        @Result(column="admin_id", property="adminId", jdbcType=JdbcType.VARCHAR),
+        @Result(column="admin_id", property="adminId", jdbcType=JdbcType.INTEGER),
         @Result(column="status", property="status", jdbcType=JdbcType.INTEGER),
         @Result(column="visible_range", property="visibleRange", jdbcType=JdbcType.INTEGER),
         @Result(column="release_time", property="releaseTime", jdbcType=JdbcType.TIMESTAMP),
@@ -51,6 +52,18 @@ public interface InformationMapper {
         @Result(column="content", property="content", jdbcType=JdbcType.LONGVARCHAR)
     })
     Information selectByPrimaryKey(Integer id);
+
+    @ResultMap("defaultMap")
+    @Select({
+            "select",
+            "id, title, cover_img, type, admin_id, status, visible_range, release_time, gmt_created, ",
+            "gmt_modified, content",
+            "from information",
+            "where type = #{type,jdbcType=INTEGER} and status = #{status} ",
+            "and now() > release_time"
+    })
+    List<Information> selectByTypeAndStatus(Integer type, Integer status);
+
 
     @Select({
         "select",
@@ -63,7 +76,7 @@ public interface InformationMapper {
         @Result(column="title", property="title", jdbcType=JdbcType.VARCHAR),
         @Result(column="cover_img", property="coverImg", jdbcType=JdbcType.VARCHAR),
         @Result(column="type", property="type", jdbcType=JdbcType.INTEGER),
-        @Result(column="admin_id", property="adminId", jdbcType=JdbcType.VARCHAR),
+        @Result(column="admin_id", property="adminId", jdbcType=JdbcType.INTEGER),
         @Result(column="status", property="status", jdbcType=JdbcType.INTEGER),
         @Result(column="visible_range", property="visibleRange", jdbcType=JdbcType.INTEGER),
         @Result(column="release_time", property="releaseTime", jdbcType=JdbcType.TIMESTAMP),
@@ -78,7 +91,7 @@ public interface InformationMapper {
         "set title = #{title,jdbcType=VARCHAR},",
           "cover_img = #{coverImg,jdbcType=VARCHAR},",
           "type = #{type,jdbcType=INTEGER},",
-          "admin_id = #{adminId,jdbcType=VARCHAR},",
+          "admin_id = #{adminId,jdbcType=INTEGER},",
           "status = #{status,jdbcType=INTEGER},",
           "visible_range = #{visibleRange,jdbcType=INTEGER},",
           "release_time = #{releaseTime,jdbcType=TIMESTAMP},",

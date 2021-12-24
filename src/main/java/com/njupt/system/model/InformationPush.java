@@ -16,6 +16,11 @@ public class InformationPush {
 
     private Integer userId;
 
+    public InformationPush(Integer informationId, Integer userId) {
+        this.informationId = informationId;
+        this.userId = userId;
+    }
+
     public Integer getId() {
         return id;
     }

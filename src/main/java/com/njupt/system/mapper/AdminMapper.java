@@ -68,6 +68,23 @@ public interface AdminMapper {
     })
     List<Admin> selectAll();
 
+    @Select({
+            "select",
+            "id",
+            "from admin",
+            "where department = #{admin.department}"
+    })
+    @Results({
+            @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
+            @Result(column="job_id", property="jobId", jdbcType=JdbcType.VARCHAR),
+            @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
+            @Result(column="type", property="type", jdbcType=JdbcType.INTEGER),
+            @Result(column="department", property="department", jdbcType=JdbcType.INTEGER),
+            @Result(column="gmt_created", property="gmtCreated", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP)
+    })
+    List<Integer> selectMyAdmins(Admin admin);
+
     @ResultMap("resultMap")
     @Select({
             "select",

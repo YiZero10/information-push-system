@@ -32,7 +32,7 @@ public class Information {
     /**
      * 发布者id
      */
-    private String adminId;
+    private Integer adminId;
 
     /**
      * 审核状态
@@ -96,12 +96,12 @@ public class Information {
         this.type = type;
     }
 
-    public String getAdminId() {
+    public Integer getAdminId() {
         return adminId;
     }
 
-    public void setAdminId(String adminId) {
-        this.adminId = adminId == null ? null : adminId.trim();
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId ;
     }
 
     public Integer getStatus() {

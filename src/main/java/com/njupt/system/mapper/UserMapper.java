@@ -49,14 +49,13 @@ public interface UserMapper {
     })
     User selectByPrimaryKey(Integer id);
 
-    @ResultMap("resultMap")
     @Select({
             "select",
-            "id, tel, name, student_id, password, type, class_id, gmt_created, gmt_modified",
+            "id",
             "from user_info",
             "where student_id = #{studentId,jdbcType=VARCHAR}"
     })
-    User selectByStudentId(String studentId);
+    List<Integer> selectIdsByStudentId(String studentId);
 
     @ResultMap("resultMap")
     @Select({
@@ -97,4 +96,12 @@ public interface UserMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(User record);
+
+    @Select({
+            "select",
+            "id",
+            "from user_info",
+            "where class_id = #{classId}"
+    })
+    List<Integer> selectByClassId(String classId);
 }
