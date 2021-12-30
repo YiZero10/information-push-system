@@ -13,6 +13,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Admin {
+    /**
+     * 主键
+     */
     private Integer id;
 
     /**
@@ -35,8 +38,14 @@ public class Admin {
      */
     private Integer department;
 
+    /**
+     * 创建时间
+     */
     private Date gmtCreated;
 
+    /**
+     * 修改时间
+     */
     private Date gmtModified;
 
     public Integer getId() {

@@ -25,8 +25,8 @@ public interface InformationMapper {
         "#{coverImg,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, ",
         "#{adminId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, ",
         "#{visibleRange,jdbcType=INTEGER}, #{releaseTime,jdbcType=TIMESTAMP}, ",
-        "#{gmtCreated,jdbcType=TIMESTAMP}, now(), ",
-        "now())"
+        "now(), now(), ",
+        "#{content,jdbcType=LONGVARCHAR})"
     })
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Information record);
@@ -55,6 +55,12 @@ public interface InformationMapper {
 
     @ResultMap("defaultMap")
     @Select({
+            "select * from information where admin_id = #{adminId}"
+    })
+    List<Information> selectByAdminId(Integer adminId);
+
+    @ResultMap("defaultMap")
+    @Select({
             "select",
             "id, title, cover_img, type, admin_id, status, visible_range, release_time, gmt_created, ",
             "gmt_modified, content",
@@ -64,6 +70,16 @@ public interface InformationMapper {
     })
     List<Information> selectByTypeAndStatus(Integer type, Integer status);
 
+    @ResultMap("defaultMap")
+    @Select({
+            "select",
+            "id, title, cover_img, type, admin_id, status, visible_range, release_time, gmt_created, ",
+            "gmt_modified, content",
+            "from information",
+            "where type = #{type,jdbcType=INTEGER} and status = #{status} and visible_range = #{visible}",
+            "and now() > release_time"
+    })
+    List<Information> selectByTypeAndStatusAndVisible(Integer type, Integer status, Integer visible);
 
     @Select({
         "select",

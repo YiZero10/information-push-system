@@ -30,6 +30,21 @@ public interface InformationService {
     List<Information> getInformation(Admin admin, Integer type);
 
     /**
+     * 获取待审核的消息
+     * @param admin
+     * @param type
+     * @return
+     */
+    List<Information> getWaitAuditInfos(Admin admin, Integer type);
+
+    /**
+     * 获取消息的详情
+     * @param id
+     * @return
+     */
+    Information getInformationDetail(Integer id);
+
+    /**
      * 提交信息
      * @param admin
      * @param information

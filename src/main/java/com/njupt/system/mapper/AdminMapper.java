@@ -83,7 +83,7 @@ public interface AdminMapper {
             @Result(column="gmt_created", property="gmtCreated", jdbcType=JdbcType.TIMESTAMP),
             @Result(column="gmt_modified", property="gmtModified", jdbcType=JdbcType.TIMESTAMP)
     })
-    List<Integer> selectMyAdmins(Admin admin);
+    List<Integer> selectMyAdmins(int dept);
 
     @ResultMap("resultMap")
     @Select({

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.njupt.system.config.CheckAdmin;
 import com.njupt.system.config.TokenInterceptor;
 import com.njupt.system.enums.Permission;
+import com.njupt.system.mapper.UserMapper;
 import com.njupt.system.model.Admin;
 import com.njupt.system.model.SignInModel;
 import com.njupt.system.model.User;
@@ -28,6 +29,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @RequestMapping("/test")
     public String init(){return "Welcome!";}
@@ -102,5 +105,14 @@ public class UserController {
     @RequestMapping("/user/pwd/modify")
     public boolean modifyUsrPassword(User user, @RequestParam("old") String oldPwd, @RequestParam("new") String newPwd){
         return userService.modifyPassword(user, oldPwd, newPwd);
+    }
+
+    @CheckAdmin
+    @RequestMapping("/all/ids")
+    public JSONObject getAllIds(Admin admin){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("classIds",userMapper.selectAllClassIds());
+        jsonObject.put("studentIds",userMapper.selectAllStudentIds());
+        return jsonObject;
     }
 }

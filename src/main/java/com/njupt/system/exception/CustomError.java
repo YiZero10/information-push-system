@@ -30,7 +30,11 @@ public enum CustomError {
 
     DELETE_SELF(5010, "不能删除自己哦！"),
 
-    INFORMATION_NOT_EXIT(5011,"该信息不存在");
+    INFORMATION_NOT_EXIT(5011,"该信息不存在"),
+
+    USER_EXIT(5012, "该手机号已被注册"),
+
+    STUDENT_EXIT(5013, "该学生已被注册");
 
     private int code;
 

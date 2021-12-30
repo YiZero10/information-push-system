@@ -44,7 +44,7 @@ public interface InformationPushMapper {
             "AND type = #{type} "+
             "AND NOW() > release_time"})
     @Results({
-            @Result(column="information_id", property="id", jdbcType=JdbcType.INTEGER, id=true),
+            @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
             @Result(column="title", property="title", jdbcType=JdbcType.VARCHAR),
             @Result(column="cover_img", property="coverImg", jdbcType=JdbcType.VARCHAR),
             @Result(column="type", property="type", jdbcType=JdbcType.INTEGER),

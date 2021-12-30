@@ -37,6 +37,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean register(User user) {
+        if (userMapper.selectByTel(user.getTel()) != null)
+            throw new LocalRuntimeException(CustomError.USER_EXIT);
+        if (user.getType().equals(Permission.STUDENT.getCode()) && userMapper.selectByStudentIdAndType(user.getStudentId(), user.getType()) != null)
+            throw new LocalRuntimeException(CustomError.STUDENT_EXIT);
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         return userMapper.insert(user) == 1;
     }

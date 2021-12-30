@@ -42,9 +42,10 @@ public class InformationServiceImpl implements InformationService {
             //选出所有通过的公共信息
             return informationMapper.selectByTypeAndStatus(InformationType.PUBLIC_INFORMATION.getCode(), Status.PASS_AUDIT.getCode());
         else{
-            //选出公共可见的&指定推送的信息
+            //选出指定推送的相关类别的信息
             List<Information> results = informationPushMapper.selectMyInformation(user,type);
-            results.addAll(informationMapper.selectByTypeAndStatus(type, Status.PASS_AUDIT.getCode()));
+            //选出公共可见的相关类别的信息
+            results.addAll(informationMapper.selectByTypeAndStatusAndVisible(type, Status.PASS_AUDIT.getCode(), VisibleRange.PUBLIC.getCode()));
             return results;
         }
     }
@@ -56,31 +57,50 @@ public class InformationServiceImpl implements InformationService {
             return informationMapper.selectAll().stream().filter(information -> information.getType().equals(type)).collect(Collectors.toList());
         }else if (isDeptAdmin(admin)){
             //部门所有的管理员
-            List<Integer> myAdmins = adminMapper.selectMyAdmins(admin);
+            List<Integer> myAdmins = adminMapper.selectMyAdmins(admin.getDepartment());
             //选出这个部门所有管理员发布的该类型的信息
             return informationMapper.selectAll().stream().filter(information -> information.getType().equals(type) &&
                     myAdmins.contains(information.getAdminId())).collect(Collectors.toList());
+        }
+        return informationMapper.selectByAdminId(admin.getId()).stream().filter(information -> information.getType().equals(type)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Information> getWaitAuditInfos(Admin admin, Integer type) {
+        if (isRoot(admin)){
+            return informationMapper.selectByTypeAndStatus(type, Status.WAIT_AUDIT.getCode());
+        }else if ((isDeptAdmin(admin))){
+            //部门所有的管理员
+            List<Integer> myAdmins = adminMapper.selectMyAdmins(admin.getDepartment());
+            return informationMapper.selectByTypeAndStatus(type, Status.WAIT_AUDIT.getCode()).stream().filter(information -> myAdmins.contains(information.getAdminId())).collect(Collectors.toList());
         }
         return null;
     }
 
     @Override
+    public Information getInformationDetail(Integer id) {
+        return informationMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public boolean submitInformation(Admin admin, Information information, List<String> objects) {
+        information.setStatus(Status.WAIT_AUDIT.getCode());
+        information.setAdminId(admin.getId());
         if (information.getType().equals(InformationType.PUBLIC_INFORMATION.getCode()))
             informationMapper.insert(information);
         else if (information.getVisibleRange().equals(VisibleRange.PUBLIC.getCode())){
             informationMapper.insert(information);
         }else if (information.getVisibleRange().equals(VisibleRange.SPECIFIED_CLASS.getCode())){
-            int id = informationMapper.insert(information);
+            informationMapper.insert(information);
             for (String item:objects) {
                 List<Integer> insertObjects = userMapper.selectByClassId(item);
-                informationPushMapper.insertSpecifiedClass(id, insertObjects);
+                informationPushMapper.insertSpecifiedClass(information.getId(), insertObjects);
             }
         }else if (information.getVisibleRange().equals(VisibleRange.SPECIFIED_PERSON.getCode())){
-            int id = informationMapper.insert(information);
+            informationMapper.insert(information);
             for (String item:objects) {
                 List<Integer> ids = userMapper.selectIdsByStudentId(item);
-                informationPushMapper.insertSpecifiedClass(id, ids);
+                informationPushMapper.insertSpecifiedClass(information.getId(), ids);
             }
         }
         return true;
@@ -94,7 +114,7 @@ public class InformationServiceImpl implements InformationService {
         if (isRoot(admin))
             return informationMapper.updateByPrimaryKey(information) == 1;
         else if (isDeptAdmin(admin)){
-            List<Integer> myAdmins = adminMapper.selectMyAdmins(admin);
+            List<Integer> myAdmins = adminMapper.selectMyAdmins(admin.getDepartment());
             if (!myAdmins.contains(information.getAdminId()))
                 throw new LocalRuntimeException(CustomError.NOT_PERMISSION);
             return informationMapper.updateByPrimaryKey(information) == 1;
@@ -109,7 +129,7 @@ public class InformationServiceImpl implements InformationService {
         if (isRoot(admin))
             return informationMapper.deleteByPrimaryKey(informationId) == 1;
         else if (isDeptAdmin(admin)){
-            List<Integer> myAdmins = adminMapper.selectMyAdmins(admin);
+            List<Integer> myAdmins = adminMapper.selectMyAdmins(admin.getDepartment());
             if (!myAdmins.contains(information.getAdminId()))
                 throw new LocalRuntimeException(CustomError.NOT_PERMISSION);
             return informationMapper.deleteByPrimaryKey(informationId) == 1;

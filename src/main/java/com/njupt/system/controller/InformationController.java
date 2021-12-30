@@ -1,11 +1,13 @@
 package com.njupt.system.controller;
 
 import com.njupt.system.config.CheckAdmin;
+import com.njupt.system.model.AddInformation;
 import com.njupt.system.model.Admin;
 import com.njupt.system.model.Information;
 import com.njupt.system.model.User;
 import com.njupt.system.service.InformationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,9 +38,20 @@ public class InformationController {
     }
 
     @CheckAdmin
+    @RequestMapping("/admin/audit")
+    public List<Information> getAuditInfos(Admin admin,@RequestParam(value = "type",defaultValue = "0",required = false) Integer type){
+        return informationService.getWaitAuditInfos(admin, type);
+    }
+
+    @RequestMapping("/detail")
+    public Information getDetail(@RequestParam("id") Integer id){
+        return informationService.getInformationDetail(id);
+    }
+
+    @CheckAdmin
     @RequestMapping("/add")
-    public boolean addInformation(Admin admin, Information information, List<String> objects){
-        return informationService.submitInformation(admin, information, objects);
+    public boolean addInformation(Admin admin, @RequestBody AddInformation addInformation){
+        return informationService.submitInformation(admin, addInformation.getInformation(), addInformation.getObjects());
     }
 
     @CheckAdmin
